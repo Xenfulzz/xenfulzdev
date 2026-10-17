@@ -1,0 +1,973 @@
+/* ==========================================================================
+   Xenfulz — style.css
+   1. Design tokens      5. Buttons
+   2. Base               6. "More" popover
+   3. Hero & pill        7. Scroll hint & projects
+   4. Profile card       8. Animations, responsive, reduced motion
+   ========================================================================== */
+
+
+/* 1. DESIGN TOKENS
+   ========================================================================== */
+:root {
+  color-scheme: dark;
+
+  /* Colour */
+  --bg: #191919;
+  --card: #292929;
+  --surface: #353535;
+  --surface-hover: #404040;
+  --surface-active: #2f2f2f;
+  --text: #f5f5f5;
+  --text-muted: #a7a7a7;
+  --border: #484848;
+  --border-soft: rgba(255, 255, 255, 0.06);
+  /* Accent / glow colour. These are only DEFAULTS: script.js samples profile.png
+     and overwrites --accent and --accent-rgb with the picture's main colour. */
+  --accent: #e8d07d;
+  --accent-rgb: 232, 208, 125;
+  --accent-ring: rgba(var(--accent-rgb), 0.12);
+  --accent-ring-strong: rgba(var(--accent-rgb), 0.22);
+  --accent-glow: rgba(var(--accent-rgb), 0.3);
+
+  /* Type */
+  --font-sans: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+
+  /* Spacing */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-8: 4rem;
+
+  /* Shape */
+  --radius-card: 28px;
+  --radius-menu: 18px;
+  --radius-btn: 12px;
+  --radius-item: 12px;
+  --radius-pill: 999px;
+
+  /* Sizes */
+  --avatar-size: 124px;
+  --btn-height: 44px;
+
+  /* Depth */
+  --shadow-card: 0 1px 0 rgba(255, 255, 255, 0.04) inset, 0 28px 56px -18px rgba(0, 0, 0, 0.7);
+  --shadow-menu: 0 22px 48px -12px rgba(0, 0, 0, 0.75), 0 2px 8px rgba(0, 0, 0, 0.35);
+  --shadow-lift: 0 10px 20px -10px rgba(0, 0, 0, 0.7);
+
+  /* Motion */
+  --ease-out: cubic-bezier(0.22, 0.8, 0.24, 1);
+  --ease-spring: cubic-bezier(0.34, 1.4, 0.64, 1);
+  --dur-fast: 150ms;
+  --dur-med: 240ms;
+  --dur-slow: 800ms;
+}
+
+
+/* 2. BASE
+   ========================================================================== */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  background: var(--bg);
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  scrollbar-color: #3a3a3a var(--bg);
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  overflow-x: hidden;
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  line-height: 1.5;
+  color: var(--text);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+main:focus,
+.projects:focus {
+  outline: none;
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--bg);
+}
+
+a {
+  color: inherit;
+}
+
+ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Icons */
+.icon {
+  display: block;
+  flex: none;
+  width: 1.25rem;
+  height: 1.25rem;
+  fill: currentColor;
+}
+
+.icon--stroke {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.sprite {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+
+/* 3. HERO & TOP-LEFT PILL
+   ========================================================================== */
+.pill {
+  position: fixed;
+  top: max(var(--space-4), env(safe-area-inset-top));
+  left: max(var(--space-4), env(safe-area-inset-left));
+  z-index: 30;
+  display: inline-flex;
+  align-items: center;
+  min-height: 36px;
+  padding: 0 0.875rem;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: -0.005em;
+  text-decoration: none;
+  color: var(--text);
+  background: var(--card);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-pill);
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    background-color var(--dur-med) var(--ease-out),
+    color var(--dur-med) var(--ease-out);
+}
+
+.pill:hover {
+  background: var(--surface);
+}
+
+.pill:active {
+  background: var(--surface-active);
+}
+
+.pill:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+.hero {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  place-items: center;
+  min-height: 100vh;
+  min-height: 100svh;
+  padding:
+    calc(5.5rem + env(safe-area-inset-top))
+    var(--space-4)
+    calc(5.5rem + env(safe-area-inset-bottom));
+}
+
+/* Very faint warm glow behind the card */
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: radial-gradient(46rem 26rem at 50% 50%, rgba(var(--accent-rgb), 0.075), transparent 70%);
+}
+
+
+/* 4. PROFILE CARD
+   ========================================================================== */
+.profile-card {
+  display: flex;
+  align-items: center;
+  gap: var(--space-5);
+  width: fit-content;
+  max-width: 100%;
+  padding: var(--space-5);
+  background: var(--card);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+  animation: card-in var(--dur-slow) var(--ease-out) backwards;
+}
+
+/* Profile picture */
+.avatar {
+  position: relative;
+  flex: none;
+  width: var(--avatar-size);
+  aspect-ratio: 1;
+  overflow: hidden;
+  background: var(--surface);
+  border: 2px solid var(--accent);
+  border-radius: 50%;
+  box-shadow:
+    0 0 0 6px var(--accent-ring),
+    0 0 38px var(--accent-glow),
+    0 16px 30px -12px rgba(0, 0, 0, 0.75);
+  transition:
+    transform 420ms var(--ease-spring),
+    border-color 500ms var(--ease-out),
+    box-shadow 500ms var(--ease-out);
+}
+
+.avatar__img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+/* Shown only if profile.png can't be loaded (toggled by script.js) */
+.avatar__fallback {
+  position: absolute;
+  inset: 0;
+  display: none;
+  place-items: center;
+  font-size: calc(var(--avatar-size) * 0.42);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  color: var(--accent);
+  background: radial-gradient(circle at 30% 25%, #444 0%, #2b2b2b 70%);
+  user-select: none;
+}
+
+.avatar.is-fallback .avatar__fallback {
+  display: grid;
+}
+
+.avatar.is-fallback .avatar__img {
+  display: none;
+}
+
+@media (hover: hover) {
+  .avatar:hover {
+    transform: translateY(-3px) rotate(-3deg) scale(1.04);
+    box-shadow:
+      0 0 0 9px var(--accent-ring-strong),
+      0 0 52px var(--accent-glow),
+      0 22px 36px -14px rgba(0, 0, 0, 0.8);
+  }
+}
+
+.avatar:active {
+  transform: scale(0.97);
+}
+
+/* Name + tagline */
+.profile-info {
+  min-width: 0;
+}
+
+.profile-name {
+  margin: 0;
+  font-size: 2.25rem;
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.035em;
+}
+
+.tagline {
+  margin: 0.375rem 0 1.125rem;
+  font-size: 0.9375rem;
+  color: var(--text-muted);
+}
+
+
+/* 5. BUTTONS
+   ========================================================================== */
+.actions {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-2);
+}
+
+.actions > :nth-child(1) { --i: 0; }
+.actions > :nth-child(2) { --i: 1; }
+.actions > :nth-child(3) { --i: 2; }
+.actions > :nth-child(4) { --i: 3; }
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: var(--btn-height);
+  margin: 0;
+  padding: 0 0.875rem;
+  font: inherit;
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1;
+  text-decoration: none;
+  white-space: nowrap;
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-btn);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    background-color var(--dur-med) var(--ease-out),
+    transform var(--dur-med) var(--ease-out),
+    box-shadow var(--dur-med) var(--ease-out);
+  animation: rise 600ms var(--ease-out) calc(380ms + var(--i, 0) * 70ms) backwards;
+}
+
+.btn .icon {
+  width: 1.125rem;
+  height: 1.125rem;
+  transition: color var(--dur-med) var(--ease-out);
+}
+
+@media (hover: hover) {
+  .btn:hover {
+    background: var(--surface-hover);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lift);
+  }
+
+  .btn:hover .icon {
+    color: var(--accent);
+  }
+}
+
+.btn:active {
+  background: var(--surface-active);
+  transform: translateY(0) scale(0.97);
+  box-shadow: none;
+  transition-duration: var(--dur-fast);
+}
+
+.btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+.btn[aria-expanded="true"] {
+  background: var(--surface-hover);
+}
+
+.btn[aria-expanded="true"] .icon {
+  color: var(--accent);
+}
+
+/* Compact button used inside project cards */
+.btn--small {
+  --btn-height: 36px;
+  padding: 0 0.875rem;
+  font-size: 0.8125rem;
+  border-radius: 10px;
+  animation: none;
+}
+
+.btn--icon {
+  min-width: 3rem;
+  padding: 0 0.75rem;
+}
+
+
+/* 6. "MORE" POPOVER
+   ========================================================================== */
+.more {
+  position: relative;
+  display: flex;
+}
+
+.more > .btn {
+  flex: 1;
+}
+
+.more-menu {
+  position: absolute;
+  top: calc(100% + 0.625rem);
+  right: 0;
+  z-index: 20;
+  width: 19rem;
+  max-width: calc(100vw - 2rem);
+  padding: var(--space-2);
+  text-align: left;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-menu);
+  box-shadow: var(--shadow-menu);
+  transform-origin: top right;
+
+  /* closed state */
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateY(-6px) scale(0.96);
+  transition:
+    opacity var(--dur-med) var(--ease-out),
+    transform var(--dur-med) var(--ease-out),
+    visibility 0s linear var(--dur-med);
+}
+
+.more-menu:focus {
+  outline: none;
+}
+
+.more-menu.is-up {
+  top: auto;
+  bottom: calc(100% + 0.625rem);
+  transform-origin: bottom right;
+  transform: translateY(6px) scale(0.96);
+}
+
+.more-menu.is-open {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: none;
+  transition-delay: 0s;
+}
+
+.menu-list {
+  display: grid;
+  gap: 2px;
+}
+
+.menu-link {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: 0.5rem 0.625rem;
+  text-decoration: none;
+  color: var(--text);
+  border-radius: var(--radius-item);
+  -webkit-tap-highlight-color: transparent;
+  transition: background-color var(--dur-med) var(--ease-out);
+}
+
+.menu-link__icon {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  background: var(--surface);
+  border-radius: 10px;
+  transition: color var(--dur-med) var(--ease-out), transform var(--dur-med) var(--ease-out);
+}
+
+.menu-link__icon .icon {
+  width: 1.125rem;
+  height: 1.125rem;
+}
+
+.menu-link__text {
+  min-width: 0;
+}
+
+.menu-link__title {
+  display: block;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.menu-link__meta {
+  display: block;
+  font-size: 0.8125rem;
+  line-height: 1.35;
+  color: var(--text-muted);
+  overflow-wrap: anywhere;
+}
+
+@media (hover: hover) {
+  .menu-link:hover {
+    background: rgba(255, 255, 255, 0.055);
+  }
+
+  .menu-link:hover .menu-link__icon {
+    color: var(--accent);
+  }
+}
+
+.menu-link:active {
+  background: rgba(255, 255, 255, 0.09);
+}
+
+.menu-link:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+  background: rgba(255, 255, 255, 0.055);
+}
+
+.menu-link:focus-visible .menu-link__icon {
+  color: var(--accent);
+}
+
+/* Link whose URL is still the placeholder (script.js adds this class) */
+.menu-link.is-pending {
+  cursor: default;
+}
+
+.menu-link.is-pending .menu-link__icon,
+.menu-link.is-pending .menu-link__title {
+  opacity: 0.55;
+}
+
+
+/* 7. SCROLL HINT & PROJECTS
+   ========================================================================== */
+.scroll-hint {
+  position: absolute;
+  left: 50%;
+  bottom: max(var(--space-4), env(safe-area-inset-bottom));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.125rem;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  text-decoration: none;
+  color: var(--text-muted);
+  border-radius: var(--radius-btn);
+  transform: translateX(-50%);
+  -webkit-tap-highlight-color: transparent;
+  transition: color var(--dur-med) var(--ease-out);
+  animation: fade-in var(--dur-slow) var(--ease-out) 1000ms backwards;
+}
+
+.scroll-hint:hover {
+  color: var(--text);
+}
+
+.scroll-hint:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.scroll-hint__arrow {
+  width: 1.125rem;
+  height: 1.125rem;
+  animation: bob 2.6s ease-in-out infinite;
+}
+
+.projects {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-5);
+  min-height: 100vh;
+  min-height: 100svh;
+  padding: 6rem var(--space-4) 5.5rem;
+  text-align: center;
+}
+
+.projects__head {
+  display: grid;
+  gap: var(--space-1);
+}
+
+.projects__title {
+  margin: 0;
+  font-size: 1.875rem;
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.03em;
+}
+
+.projects__sub {
+  margin: 0;
+  font-size: 1rem;
+  color: var(--text-muted);
+}
+
+.project-list {
+  display: grid;
+  gap: var(--space-4);
+  width: 100%;
+  max-width: 28rem;
+  margin-top: var(--space-2);
+  text-align: left;
+}
+
+.project-card {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-5);
+  background: var(--card);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+  transition:
+    transform var(--dur-med) var(--ease-out),
+    border-color var(--dur-med) var(--ease-out);
+}
+
+@media (hover: hover) {
+  .project-card:hover {
+    transform: translateY(-3px);
+    border-color: var(--border);
+  }
+}
+
+.project-icon {
+  position: relative;
+  flex: none;
+  width: 96px;
+  height: 96px;
+  overflow: hidden;
+  background: var(--surface);
+  border-radius: 18px;
+}
+
+.project-icon__img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Shown only if the icon file can't be loaded (toggled by script.js) */
+.project-icon__fallback {
+  position: absolute;
+  inset: 0;
+  display: none;
+  place-items: center;
+  font-size: 2.5rem;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  color: var(--accent);
+  background: radial-gradient(circle at 30% 25%, #444 0%, #2b2b2b 70%);
+  user-select: none;
+}
+
+.project-icon.is-fallback .project-icon__fallback {
+  display: grid;
+}
+
+.project-icon.is-fallback .project-icon__img {
+  display: none;
+}
+
+.project-body {
+  min-width: 0;
+}
+
+.project-name {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: -0.03em;
+}
+
+.project-desc {
+  margin: 0.125rem 0 0.75rem;
+  font-size: 0.9375rem;
+  line-height: 1.45;
+  color: var(--text-muted);
+}
+
+.project-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.projects__note {
+  margin: var(--space-2) 0 0;
+  font-size: 0.875rem;
+  color: var(--text-muted);
+}
+
+.back-to-top {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.875rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-decoration: none;
+  color: var(--text-muted);
+  border-radius: var(--radius-btn);
+  -webkit-tap-highlight-color: transparent;
+  transition: color var(--dur-med) var(--ease-out);
+}
+
+.back-to-top .icon {
+  width: 1rem;
+  height: 1rem;
+}
+
+.back-to-top:hover {
+  color: var(--accent);
+}
+
+.back-to-top:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.footer-legal {
+  position: absolute;
+  right: 0;
+  bottom: max(var(--space-5), env(safe-area-inset-bottom));
+  left: 0;
+  font-size: 0.8125rem;
+  color: var(--text-muted);
+}
+
+/* 8. ANIMATIONS
+   ========================================================================== */
+@keyframes card-in {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes bob {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(5px); }
+}
+
+
+/* RESPONSIVE
+   ========================================================================== */
+
+/* Phones & small tablets: stack the card and use 2x2 buttons. */
+@media (max-width: 720px) {
+  :root {
+    --avatar-size: 112px;
+    --btn-height: 48px;
+  }
+
+  .hero {
+    padding-top: calc(5rem + env(safe-area-inset-top));
+    padding-bottom: calc(5.5rem + env(safe-area-inset-bottom));
+  }
+
+  .profile-card {
+    flex-direction: column;
+    gap: var(--space-4);
+    width: 100%;
+    max-width: 26rem;
+    padding: var(--space-5) 1.25rem 1.25rem;
+    text-align: center;
+  }
+
+  .profile-info {
+    width: 100%;
+  }
+
+  .profile-name {
+    font-size: 2rem;
+  }
+
+  .tagline {
+    margin-bottom: 1.25rem;
+  }
+
+  .actions {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.625rem;
+  }
+
+  .btn {
+    font-size: 0.9375rem;
+  }
+}
+
+/* Landscape phones: keep the card compact — picture beside the text, 2x2 buttons */
+@media (max-width: 720px) and (max-height: 480px) {
+  :root {
+    --avatar-size: 96px;
+    --btn-height: 44px;
+  }
+
+  .profile-card {
+    flex-direction: row;
+    gap: var(--space-5);
+    width: fit-content;
+    max-width: 100%;
+    padding: var(--space-4) var(--space-5);
+    text-align: left;
+  }
+
+  .profile-info {
+    width: auto;
+  }
+
+  .profile-name {
+    font-size: 1.75rem;
+  }
+
+  .tagline {
+    margin-bottom: 0.875rem;
+  }
+
+  .btn {
+    font-size: 0.875rem;
+  }
+}
+
+/* "More" bottom sheet: phones, and any short (landscape) screen where a
+   dropdown wouldn't fit. (If you change these, update SHEET_QUERY in script.js.) */
+@media (max-width: 720px), (max-height: 520px) {
+  .more-menu {
+    position: fixed;
+    top: auto;
+    right: 0;
+    bottom: max(var(--space-4), env(safe-area-inset-bottom));
+    left: 0;
+    width: min(24rem, calc(100vw - 2rem));
+    max-width: none;
+    max-height: calc(100vh - 2rem);
+    max-height: calc(100svh - 2rem);
+    margin: 0 auto;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    transform-origin: bottom center;
+    transform: translateY(14px) scale(0.98);
+  }
+
+  .menu-link {
+    padding: 0.625rem;
+  }
+}
+
+/* Small phones: slightly smaller project icon */
+@media (max-width: 480px) {
+  .project-card {
+    gap: var(--space-3);
+    padding: 1.25rem;
+  }
+
+  .project-icon {
+    width: 80px;
+    height: 80px;
+    border-radius: 16px;
+  }
+
+  .project-name {
+    font-size: 1.375rem;
+  }
+}
+
+@media (max-width: 360px) {
+  .btn {
+    gap: 0.4rem;
+    padding: 0 0.5rem;
+    font-size: 0.875rem;
+  }
+
+  .profile-card {
+    padding-right: var(--space-4);
+    padding-left: var(--space-4);
+  }
+}
+
+/* Short landscape screens: tighten the vertical padding */
+@media (max-height: 480px) {
+  .hero {
+    padding-top: 4.5rem;
+    padding-bottom: 5rem;
+  }
+}
+
+
+/* REDUCED MOTION
+   Keeps colour changes and simple fades; removes movement.
+   ========================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .profile-card {
+    animation: fade-in 400ms ease backwards;
+  }
+
+  .btn,
+  .scroll-hint,
+  .scroll-hint__arrow {
+    animation: none;
+  }
+
+  .btn:hover,
+  .btn:active,
+  .project-card:hover,
+  .avatar,
+  .avatar:hover,
+  .avatar:active {
+    transform: none;
+  }
+
+  .more-menu,
+  .more-menu.is-up,
+  .more-menu.is-open {
+    transform: none;
+  }
+
+  .menu-link__icon {
+    transition: color var(--dur-med) var(--ease-out);
+  }
+}
