@@ -21,6 +21,10 @@
   // Keep in sync with the "More bottom sheet" media query in style.css.
   const SHEET_QUERY = '(max-width: 720px), (max-height: 520px)';
 
+  // false = keep the accent colour set in style.css (the Discord profile colour).
+  // true  = pick the accent colour from profile.png instead.
+  const ACCENT_FROM_PICTURE = false;
+
   /* ------------------------------------------------------------------------- */
 
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -60,7 +64,7 @@
      (--accent) stays in place. */
   function initAccentColour() {
     const img = document.querySelector('.avatar__img');
-    if (!img) return;
+    if (!ACCENT_FROM_PICTURE || !img) return;
 
     const apply = () => {
       try {
