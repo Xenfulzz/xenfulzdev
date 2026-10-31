@@ -23,10 +23,10 @@
   --text-muted: #a7a7a7;
   --border: #484848;
   --border-soft: rgba(255, 255, 255, 0.06);
-  /* Accent / glow colour: Discord profile colour #653ba3, brightened to read on
-     the dark page. (script.js no longer samples profile.png, which is black & white.) */
-  --accent: #b385e0;
-  --accent-rgb: 179, 133, 224;
+  /* Accent / glow colour: the red of the Discord profile theme, brightened to read
+     on the dark page. (script.js no longer samples profile.png, which is black & white.) */
+  --accent: #f86e6e;
+  --accent-rgb: 248, 110, 110;
   --accent-ring: rgba(var(--accent-rgb), 0.12);
   --accent-ring-strong: rgba(var(--accent-rgb), 0.22);
   --accent-glow: rgba(var(--accent-rgb), 0.3);

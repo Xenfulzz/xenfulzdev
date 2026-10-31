@@ -16,15 +16,15 @@
   <meta property="og:url" content="https://xenfulz.dev/">
 
   <!-- Uses your profile picture as the tab icon. -->
-  <link rel="icon" type="image/png" href="profile.png">
+  <link rel="icon" type="image/png" href="profile.png?v=d8e42841">
 
   <!-- Inter (falls back to the system font if offline) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap">
 
-  <link rel="stylesheet" href="style.css">
-  <script src="script.js" defer></script>
+  <link rel="stylesheet" href="style.css?v=3">
+  <script src="script.js?v=3" defer></script>
 </head>
 
 <body>
@@ -40,8 +40,8 @@
     * Add a More link: copy any list item in the More menu, then change the href,
       the title, the meta line and the icon (use href="#icon-...").
     * Pictures: "profile.png" and "buildarc.jpg" sit next to this file.
-      profile.png is the Discord profile picture; the glow / accent colour is the
-      Discord profile colour, set as --accent in style.css.
+      profile.png is the Discord profile picture (synced daily by .github/workflows);
+      the glow / accent colour is set by hand as --accent in style.css.
     ==========================================================================
   -->
 
@@ -74,7 +74,7 @@
 
         <!-- Profile picture: "profile.png" next to this file (Discord profile picture). -->
         <div class="avatar" data-fallback>
-          <img class="avatar__img" src="profile.png" alt="Xenfulz profile picture" width="500" height="500" decoding="async" fetchpriority="high">
+          <img class="avatar__img" src="profile.png?v=d8e42841" alt="Xenfulz profile picture" width="500" height="500" decoding="async" fetchpriority="high">
           <span class="avatar__fallback" aria-hidden="true">X</span>
         </div>
 

@@ -1,6 +1,6 @@
 name: Sync Discord profile
 
-# Copies the Discord profile picture and colour onto the site once a day.
+# Copies the Discord profile picture onto the site once a day.
 # Needs the repository secret DISCORD_BOT_TOKEN.
 on:
   schedule:
@@ -16,19 +16,19 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Fetch profile picture and colour
+      - name: Fetch profile picture
         env:
           DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
         run: python3 .github/scripts/sync_discord.py
 
       - name: Commit if anything changed
         run: |
-          if git diff --quiet -- profile.png style.css; then
+          if git diff --quiet -- profile.png index.html; then
             echo "Already up to date."
             exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add profile.png style.css
-          git commit -m "Sync Discord profile picture and colour"
+          git add profile.png index.html
+          git commit -m "Sync Discord profile picture"
           git push
